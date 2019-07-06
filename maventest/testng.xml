@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="suite1" parallel="tests" thread-count="5">
+	<!-- 
+	同一个test放在同一个线程中。
+	执行顺序：( 顺序执行 )
+	beforetest->beforetest2->test->test2->aftertest->aftertest2
+	(注： 有“<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >”的情况下，
+		如果一个classes中，使用参数化的方式，只能测试一组class、parameter，多组运行则失败。
+		如果一个classes中,不使用参数化的方式，就可以测试多组class。
+		下面的例子则会失败。。。。。，但是我还不知道为啥？？？
+	 )
+	<test name="test1">
+		<classes>
+			<class name="se1.TestAuto"></class>
+			<parameter name="browser" value="chrome"></parameter>
+			<parameter name="url" value="https://www.baidu.com"></parameter>
+		
+			<class name="se1.TestAuto2"></class>
+			<parameter name="browser" value="chrome"></parameter>
+			<parameter name="url" value="https://www.baidu.com"></parameter>
+		</classes>
+	</test>
+	-->
+	<!--  
+	同上
+	<test name="test1">
+		<classes>
+			<class name="se1.TestAuto"></class>
+			<class name="se1.TestAuto2"></class>
+		</classes>
+	</test> 
+	-->
+	
+	<!-- 执行顺序：( 并行执行 ) 
+	<test name="test1">
+		<classes>
+			<class name="se1.TestAuto"></class>
+			<parameter name="browser" value="chrome"></parameter>
+			<parameter name="url" value="https://www.baidu.com"></parameter>
+		</classes>
+	</test>
+	<test name="test2">
+		<classes>
+			<class name="se1.TestAuto2"></class>
+			<parameter name="browser" value="chrome"></parameter>
+			<parameter name="url" value="https://www.baidu.com"></parameter>
+		</classes>
+	</test>
+	-->
+	<!-- 
+	<test name="test">
+		<classes>
+			<class name="se1.TestAuto">
+				<methods>
+					<include name="atest1"></include>
+					<include name="btest2"></include>
+					<include name="ctest3"></include>
+				</methods>
+			</class>
+			
+			<parameter name="browser" value="chrome"></parameter>
+			<parameter name="url" value="https://www.baidu.com"></parameter>
+		</classes>
+	</test>
+	 -->
+	<!-- extentx配置
+	 <listeners>
+		<listener class-name="extentx.ExtentTestNGITestListener"></listener>
+		 默认listener
+		<listener class-name="TestngListener"></listener> 
+		
+	</listeners>
+	 -->
+	
+	<test name="test">
+		<classes>
+			<class name="se1.TestAuto2"></class>
+			<parameter name="browser" value="chrome"></parameter>
+			<parameter name="url" value="https://www.baidu.com"></parameter>
+		</classes>
+	</test>
+	
+	</suite>

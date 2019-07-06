@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>maven_test</groupId>
+  <artifactId>maventest</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+
+  <name>maventest</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <xmlFilename>testng.xml</xmlFilename>
+  </properties>
+  
+<!-- dependentcies，配置依赖关系  -->
+  <dependencies>
+    <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+	<dependency>
+		<groupId>org.seleniumhq.selenium</groupId>
+		<artifactId>selenium-java</artifactId>
+		<version>3.141.59</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+	<dependency>
+	    <groupId>org.testng</groupId>
+	    <artifactId>testng</artifactId>
+	    <version>6.14.3</version>
+	    <scope>test</scope>
+	</dependency>
+
+	<!-- https://mvnrepository.com/artifact/org.uncommons/reportng -->
+	<dependency>
+	    <groupId>org.uncommons</groupId>
+	    <artifactId>reportng</artifactId>
+	    <version>1.1.4</version>
+	    <scope>test</scope>
+	    <exclusions>
+	    	<exclusion>
+	    		<artifactId>testng</artifactId>
+	    		<groupId>org.testng</groupId>
+	    	</exclusion>
+	    </exclusions>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.google.inject/guice
+	notes：reportNG依赖guice
+	 -->
+	<dependency>
+    	<groupId>com.google.inject</groupId>
+   	 	<artifactId>guice</artifactId>
+    	<version>3.0</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+	<dependency>
+	    <groupId>javax.mail</groupId>
+	    <artifactId>mail</artifactId>
+	    <version>1.4.7</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.aventstack/extentreports -->
+	<dependency>
+	    <groupId>com.aventstack</groupId>
+	    <artifactId>extentreports</artifactId>
+	    <version>3.1.3</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+	<dependency>
+	    <groupId>org.apache.poi</groupId>
+	    <artifactId>poi</artifactId>
+	    <version>3.17</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml （poi和poi-ooxml必须版本一致）-->
+	<dependency>
+	    <groupId>org.apache.poi</groupId>
+	    <artifactId>poi-ooxml</artifactId>
+	    <version>3.17</version>
+	</dependency>
+	
+  </dependencies>
+<!-- 
+	build：真正要执行的内容；
+	pluginmanagement：maven内置lisener的定义
+ -->
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+        	<groupId>org.apache.maven.plugins</groupId>
+    		<artifactId>maven-compiler-plugin</artifactId>
+   			<version>3.7.0</version>
+        </plugin>
+        <plugin>
+         	<groupId>org.apache.maven.plugins</groupId>
+    		<artifactId>maven-surefire-plugin</artifactId>
+   			<version>2.19.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    
+    
+	<!-- 添加插件。-->
+    <plugins>
+    	<!-- 编译。  -->
+    	<plugin>
+    		<groupId>org.apache.maven.plugins</groupId>
+    		<artifactId>maven-compiler-plugin</artifactId>
+    		<configuration>
+    			<source>1.8</source>
+    			<target>1.8</target>
+    			<encoding>UTF-8</encoding>
+    		</configuration>
+    	</plugin>
+    	<!-- 执行自动化测试用例；testng默认listener监听关闭，同时打开reprot监听，生成reportng的测试报告。-->
+    	<plugin>
+    		<groupId>org.apache.maven.plugins</groupId>
+    		<artifactId>maven-surefire-plugin</artifactId>
+    		<configuration>
+    			<testFailureIgnore>true</testFailureIgnore>
+    			<forkMode>once</forkMode>
+    			<suiteXmlFiles>
+    				<suiteXmlFile>testng.xml</suiteXmlFile>
+    			</suiteXmlFiles>
+    			<!-- 关掉默认testNG的监听，使用reportNG监听 -->
+    			<properties>
+    				<property>
+    					<name>usedefaultlisteners</name>
+    					<value>false</value>
+    				</property>
+    				<property>
+    					<name>listener</name>
+    					<value>org.uncommons.reportng.HTMLReporter,org.uncommons.reportng.JUnitXMLReporter</value>
+    				</property>
+    			</properties>
+    			<workingDirectory>target/</workingDirectory>
+    		</configuration>
+    	</plugin>
+    	<!-- 读取reportNG测试报告，发送邮件。  -->
+    	<plugin>
+    		 <groupId>org.codehaus.mojo</groupId>
+    		<artifactId>exec-maven-plugin</artifactId>
+    		<version>1.1.1</version>
+    		<executions>
+    			<execution>
+    				<phase>test</phase>
+    				<goals>
+    					<goal>java</goal>
+    				</goals>
+    				<configuration>
+    					<includePluginDependencies>true</includePluginDependencies><!-- 需要引用jar包完成相应的操作 -->
+    					<mainClass>mail.AutoMail</mainClass><!-- 执行类的位置 -->
+    				</configuration>
+    			</execution>	
+    		</executions>
+    	</plugin>
+    </plugins>
+  </build>
+</project>
