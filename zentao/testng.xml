@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="zentaoSuite" parallel="tests" thread-count="5">
+	<test name="test">
+		<classes>
+			<class name="cases.zentaoTest"></class>
+			<parameter name="browser" value="chrome"></parameter>
+			<parameter name="url" value="http://localhost/zentao/user-login.html"></parameter>
+			<parameter name="username" value="admin"></parameter>
+			<parameter name="password" value="hlh915zgd0020"></parameter>
+			
+		</classes>
+	</test>
+	
+	</suite>
